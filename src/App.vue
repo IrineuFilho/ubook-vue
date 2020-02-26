@@ -1,28 +1,44 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app>
+    <toolbar></toolbar>
+
+    <list
+        v-if="contacts.length > 1"
+    />
+    <no-items
+        v-else
+    />
+
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+  import Toolbar from "@/components/contactBook/Toolbar";
+  import List from "@/components/contactBook/List";
+  import NoItems from "@/components/contactBook/NoItems";
 
-export default {
-  name: 'app',
-  components: {
-    HelloWorld
-  }
-}
+  export default {
+    name: 'App',
+
+    components: {
+      Toolbar,
+      List,
+      NoItems,
+    },
+
+    data: () => ({
+      //
+    }),
+    computed: {
+      contacts() {
+        return this.$store.getters['contactBook/getContacts']
+      }
+    }
+  };
 </script>
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style>
+  html {
+    background: #f8f9fd !important;
+  }
 </style>
