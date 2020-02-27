@@ -151,12 +151,13 @@ export default {
   watch: {
     dialog(newValue) {
       if (newValue) {
-        if (this.editedIndex < 0)
-          return;
-
-        this.name = this.editedItem.name;
-        this.email = this.editedItem.email;
-        this.telephone = this.editedItem.telephone;
+        if (this.editedIndex < 0) {
+          this.cleanForm()
+        } else {
+          this.name = this.editedItem.name;
+          this.email = this.editedItem.email;
+          this.telephone = this.editedItem.telephone;
+        }
       }
     }
   }
