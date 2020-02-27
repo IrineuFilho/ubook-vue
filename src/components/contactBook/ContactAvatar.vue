@@ -1,5 +1,5 @@
 <template>
-  <v-avatar color="indigo" size="24">
+  <v-avatar :color="randomizeColor()" size="24">
     <span class="white--text font-size--16px">{{ firstLetter }}</span>
   </v-avatar>
 </template>
@@ -12,6 +12,16 @@ export default {
       type: String,
       required: true,
       default: ''
+    }
+  },
+  data(){
+    return {
+      colors: ['red', 'pink', 'purple', 'deep-purple', 'indigo', 'blue', 'teal', 'green', 'blue-grey', 'orange']
+    }
+  },
+  methods: {
+    randomizeColor(){
+      return this.colors[Math.floor(Math.random() * 10)]
     }
   },
   computed: {
