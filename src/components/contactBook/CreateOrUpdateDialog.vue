@@ -56,12 +56,12 @@
               <v-col
                   cols="5"
                   class="py-0 mb-3">
-                <label for="telephone">Telefone ({{ telephone.length }})</label>
+                <label for="telephone">Telefone</label>
                 <v-text-field
                     id="telephone"
                     v-model="telephone"
                     class="v-text-field--custom"
-                    :rules="[validationRules.required]"
+                    :rules="[validationRules.required, validationRules.telephone]"
                     v-mask="getMask()"
                     required
                     hide-details

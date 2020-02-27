@@ -83,7 +83,6 @@ export default {
 
   computed: {
     ...mapGetters('contactBook', ['contacts', 'searchField']),
-
   },
   watch: {
     searchField(newValue){
@@ -96,7 +95,7 @@ export default {
       }
     },
     contacts(newValue) {
-      this.contactList = newValue;
+      this.contactList = [...this.contactList, newValue];
     }
   }
 }
