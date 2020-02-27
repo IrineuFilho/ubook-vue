@@ -38,7 +38,7 @@
 import AddContactButton from "./AddContactButton";
 
 export default {
-  name: 'list',
+  name: 'no-items',
   components: { AddContactButton },
   data() {
     return {}

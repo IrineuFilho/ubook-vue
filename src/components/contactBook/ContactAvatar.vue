@@ -17,7 +17,7 @@ export default {
   computed: {
     firstLetter(){
       if (this.contactName && this.contactName.length > 0)
-        return this.contactName[0];
+        return this.contactName[0].toUpperCase();
       return 'U'
     }
   }

@@ -16,7 +16,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(item, index) in contactList" :key="index">
+            <tr v-for="(item, index) in contactList"
+                :class="{'highlight': highlighted(item)}"
+                :key="index">
               <td class="font-weight-regular" width="30px">
                 <contact-avatar :contactName="item.name"/>
               </td>
@@ -57,11 +59,12 @@ export default {
   name: 'list',
   components: {ContactAvatar},
   mounted(){
-    this.contactList = this.contacts;
+    this.contactList = this.contacts
   },
   data() {
     return {
       contactList: [],
+      loaded: false
     }
   },
   methods: {
@@ -78,7 +81,20 @@ export default {
     deleteItem(index) {
       this.openDeleteDialog();
       this.setIndexToBeDeleted(index)
-    }
+    },
+    removeHighlight(index){
+      const vm = this;
+      setTimeout(() => {
+        const item = vm.contactList[index]
+        vm.$set(vm.contactList, index, {...item, highlight: false})
+      }, 10000)
+    },
+    highlighted(item){
+      if (!item)
+        return false
+
+      return item.hasOwnProperty('highlight') ? item.highlight: false;
+    },
   },
 
   computed: {
@@ -95,7 +111,14 @@ export default {
       }
     },
     contacts(newValue) {
-      this.contactList = [...this.contactList, newValue];
+      if (newValue.length > this.contactList.length){
+        const lastIndex = newValue.length-1;
+        const lastItem = newValue[lastIndex];
+        this.contactList.push({...lastItem, highlight: true});
+        this.removeHighlight(lastIndex);
+      } else {
+        this.contactList = Object.assign([], newValue);
+      }
     }
   }
 }
@@ -117,8 +140,13 @@ export default {
   }
 
   tbody {
+    tr {
+      &.highlight{
+        background: #fff3f2 !important;
+      }
+    }
     tr:hover {
-      background: #fff3f2 !important;
+
       cursor: pointer;
     }
   }

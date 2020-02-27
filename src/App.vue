@@ -9,7 +9,7 @@
         v-if="contacts.length <= 0"
     />
     <list
-        v-else
+        v-show="contacts.length > 0"
     />
 
 
@@ -33,7 +33,7 @@ export default {
     CreateOrUpdateDialog,
     DeleteContactDialog
   },
-  mounted(){
+  beforeMount(){
     this.recoveryContacts()
   },
   methods: {
