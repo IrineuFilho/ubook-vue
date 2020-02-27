@@ -8,18 +8,37 @@
           <template v-slot:default>
             <thead>
             <tr>
-              <th class="text-left">Nome</th>
-              <th class="text-left">E-mail</th>
-              <th class="text-left">Telefone</th>
+              <th class="text-left font-weight-regular"></th>
+              <th class="text-left font-weight-regular">Contatos</th>
+              <th class="text-left font-weight-regular">E-mail</th>
+              <th class="text-left font-weight-regular">Telefone</th>
               <th class="text-left"></th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="item in desserts" :key="item.name">
-              <td>{{ item.name }}</td>
-              <td>{{ item.email }}</td>
-              <td>{{ item.telephone }}</td>
-              <td></td>
+            <tr v-for="(item, index) in contacts" :key="index">
+              <td class="font-weight-regular" width="30px">
+                <contact-avatar :contactName="item.name"/>
+              </td>
+              <td class="font-weight-regular">{{ item.name }}</td>
+              <td class="font-weight-regular">{{ item.email }}</td>
+              <td class="font-weight-regular">{{ item.telephone }}</td>
+              <td>
+                <div class="d-flex justify-end">
+
+                  <v-img
+                      @click="editItem(item, index)"
+                      class="mr-6"
+                      max-width="16px"
+                      src="@/assets/ic-edit.svg"/>
+
+                  <v-img
+                      @click="deleteItem(index)"
+                      max-width="16px"
+                      src="@/assets/ic-delete.svg"/>
+                </div>
+
+              </td>
             </tr>
             </tbody>
           </template>
@@ -30,30 +49,59 @@
 
 </template>
 <script>
+import { mapGetters, mapActions } from 'vuex';
+import ContactAvatar from "./ContactAvatar";
 
-  export default {
-    name: 'list',
-    data() {
-      return {
-        desserts: [{ name: 'a', calories: '1' }]
-      }
+export default {
+  name: 'list',
+  components: {ContactAvatar},
+  data() {
+    return {}
+  },
+  methods: {
+    ...mapActions('contactBook',
+      [
+        'setEditedItem', 'openCreateOrUpdateDialog',
+        'setIndexToBeDeleted', 'openDeleteDialog'
+      ]
+    ),
+    editItem(editedItem, index) {
+      this.setEditedItem({ editedItem, index });
+      this.openCreateOrUpdateDialog();
+    },
+    deleteItem(index) {
+      this.openDeleteDialog();
+      this.setIndexToBeDeleted(index)
+
     }
+  },
+
+  computed: {
+    ...mapGetters('contactBook', ['contacts']),
   }
+}
 
 </script>
 
 <style lang="scss">
-  .v-data-table {
-    thead {
-      background: #fff !important;
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
-    }
+.v-data-table {
+  .v-data-table__wrapper {
+    border-radius: 4px;
+    border: 1px solid #e1e1e1;
+  }
 
-    tbody{
-      tr:hover{
-        background: #fff3f2 !important;
-      }
+  thead {
+    background: #fff !important;
+    th{
+      color: #9198af !important;
     }
   }
+
+  tbody {
+    tr:hover {
+      background: #fff3f2 !important;
+      cursor: pointer;
+    }
+  }
+}
 </style>

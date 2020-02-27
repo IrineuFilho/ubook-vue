@@ -7,7 +7,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   modules: {
-    contactBook: contactBook,
+    contactBook,
   }
 });
 
