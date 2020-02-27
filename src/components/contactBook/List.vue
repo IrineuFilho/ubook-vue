@@ -16,7 +16,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(item, index) in contacts" :key="index">
+            <tr v-for="(item, index) in contactList" :key="index">
               <td class="font-weight-regular" width="30px">
                 <contact-avatar :contactName="item.name"/>
               </td>
@@ -50,13 +50,19 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import { filter } from 'lodash'
 import ContactAvatar from "./ContactAvatar";
 
 export default {
   name: 'list',
   components: {ContactAvatar},
+  mounted(){
+    this.contactList = this.contacts;
+  },
   data() {
-    return {}
+    return {
+      contactList: [],
+    }
   },
   methods: {
     ...mapActions('contactBook',
@@ -72,12 +78,26 @@ export default {
     deleteItem(index) {
       this.openDeleteDialog();
       this.setIndexToBeDeleted(index)
-
     }
   },
 
   computed: {
-    ...mapGetters('contactBook', ['contacts']),
+    ...mapGetters('contactBook', ['contacts', 'searchField']),
+
+  },
+  watch: {
+    searchField(newValue){
+      if(newValue !== ''){
+        this.contactList = filter(this.contacts, (contact) => {
+          return contact.name.indexOf(newValue) !== -1
+        })
+      } else {
+        this.contactList = this.contacts;
+      }
+    },
+    contacts(newValue) {
+      this.contactList = newValue;
+    }
   }
 }
 

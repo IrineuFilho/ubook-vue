@@ -1,28 +1,23 @@
-import { filter } from 'lodash'
-
 export default {
   namespaced: true,
   state: {
-    contacts: [
-      { name: 'Irineu', email: 'a', telephone: '82123123123' },
-      { name: 'Irineu 1', email: 'b', telephone: '82123123123' },
-      { name: 'Irineu 2', email: 'c', telephone: '82123123123' },
-      { name: 'Irineu 3', email: 'd', telephone: '82123123123' },
-      { name: 'Irineu 4', email: 'f', telephone: '82123123123' },
-      { name: 'Irineu 5', email: 'g', telephone: '82123123123' },
-      { name: 'Irineu 6', email: 'h', telephone: '82123123123' },
-      { name: 'Irineu 7', email: 'j', telephone: '82123123123' },
-
-      ],
+    contacts: [],
     // contacts: [],
     dialog: false,
     deleteDialog: false,
     editedItem: {},
     editedIndex: -1,
-    indexToBeDeleted: -1
+    indexToBeDeleted: -1,
+    searchField: '',
   },
 
   mutations: {
+    RECOVERY_CONTACTS(state){
+      if (localStorage.getItem('contacts') === null){
+        localStorage.setItem('contacts', JSON.stringify([]))
+      }
+      state.contacts = JSON.parse(localStorage.getItem("contacts"))
+    },
     OPEN_CREATE_OR_UPDATE_DIALOG(state) {
       state.dialog = true;
     },
@@ -50,6 +45,8 @@ export default {
 
       state.editedIndex = -1;
       state.editedItem = {};
+
+      localStorage.setItem('contacts', JSON.stringify(state.contacts))
     },
     SET_INDEX_TO_BE_DELETED(state, index) {
       state.indexToBeDeleted = index;
@@ -57,16 +54,18 @@ export default {
     DELETE_ITEM(state) {
       state.contacts.splice(state.indexToBeDeleted, 1)
       state.indexToBeDeleted = -1;
+
+      localStorage.setItem('contacts', JSON.stringify(state.contacts))
     },
     SEARCH_IN_CONTACTS(state, q) {
-      state.contacts = filter(state.contacts, (contact) => {
-        return contact.name.indexOf(q) !== -1
-      })
-
+      state.searchField = q
     }
   },
 
   actions: {
+    recoveryContacts({commit}){
+      commit('RECOVERY_CONTACTS')
+    },
     openCreateOrUpdateDialog({ commit }) {
       commit('OPEN_CREATE_OR_UPDATE_DIALOG')
     },
@@ -111,6 +110,9 @@ export default {
     },
     editedIndex(state) {
       return state.editedIndex;
+    },
+    searchField(state){
+      return state.searchField;
     }
   }
 }

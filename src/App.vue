@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import Toolbar from "@/components/contactBook/Toolbar";
 import List from "@/components/contactBook/List";
 import NoItems from "@/components/contactBook/NoItems";
@@ -32,13 +33,14 @@ export default {
     CreateOrUpdateDialog,
     DeleteContactDialog
   },
-  data: () => ({
-
-  }),
+  mounted(){
+    this.recoveryContacts()
+  },
+  methods: {
+    ...mapActions('contactBook', ['recoveryContacts'])
+  },
   computed: {
-    contacts() {
-      return this.$store.getters['contactBook/contacts']
-    }
+    ...mapGetters('contactBook', ['contacts'])
   }
 };
 </script>

@@ -54,14 +54,15 @@
             </v-row>
             <v-row>
               <v-col
-                  cols="4"
+                  cols="5"
                   class="py-0 mb-3">
-                <label for="telephone">Telefone</label>
+                <label for="telephone">Telefone ({{ telephone.length }})</label>
                 <v-text-field
                     id="telephone"
                     v-model="telephone"
                     class="v-text-field--custom"
                     :rules="[validationRules.required]"
+                    v-mask="getMask()"
                     required
                     hide-details
                     outlined
@@ -102,51 +103,64 @@
   </v-dialog>
 </template>
 <script>
-  import { mapGetters, mapActions } from 'vuex';
-  import validationRules from '@/mixins/validation-rules'
+import { mapGetters, mapActions } from 'vuex';
+import validationRules from '@/mixins/validation-rules'
+import {mask} from 'vue-the-mask'
 
-  export default {
-    name: 'create-or-update-dialog',
-    data() {
-      return {
-        name: '',
-        email: '',
-        telephone: '',
-        valid: false,
-        validationRules
+export default {
+  name: 'create-or-update-dialog',
+  directives: {
+    mask,
+  },
+  data() {
+    return {
+      name: '',
+      email: '',
+      telephone: '',
+      valid: false,
+      validationRules
+    }
+  },
+  methods: {
+    ...mapActions('contactBook', ['closeCreateOrUpdateDialog', 'saveEditedItem']),
+    validationForEmailField() {
+      if (this.email !== '') {
+        return [validationRules.email]
       }
+      return [];
     },
-    methods: {
-      ...mapActions('contactBook', ['closeCreateOrUpdateDialog', 'saveEditedItem']),
-      validationForEmailField() {
-        if (this.email !== '') {
-          return [validationRules.email]
-        }
-        return [];
-      },
-      save() {
-        const payload = { name: this.name, email: this.email, telephone: this.telephone }
+    getMask() {
+      return this.telephone.length < 15 ? '(##) ####-####' : '(##) #####-####'
+    },
+    save() {
+      const payload = { name: this.name, email: this.email, telephone: this.telephone };
 
-        this.saveEditedItem(payload)
-        this.closeCreateOrUpdateDialog()
-      },
+      this.saveEditedItem(payload);
+      this.closeCreateOrUpdateDialog();
+      this.cleanForm();
     },
-    computed: {
-      ...mapGetters('contactBook', ['dialog', 'editedItem', 'editedIndex']),
-    },
-    watch: {
-      dialog(newValue) {
-        if (newValue) {
-          if (this.editedIndex < 0)
-            return;
+    cleanForm() {
+      this.name = '';
+      this.email = '';
+      this.telephone = '';
+    }
+  },
+  computed: {
+    ...mapGetters('contactBook', ['dialog', 'editedItem', 'editedIndex']),
+  },
+  watch: {
+    dialog(newValue) {
+      if (newValue) {
+        if (this.editedIndex < 0)
+          return;
 
-          this.name = this.editedItem.name;
-          this.email = this.editedItem.email;
-          this.telephone = this.editedItem.telephone;
-        }
+        this.name = this.editedItem.name;
+        this.email = this.editedItem.email;
+        this.telephone = this.editedItem.telephone;
       }
     }
   }
+}
 
 </script>
 
