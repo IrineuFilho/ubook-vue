@@ -4,6 +4,7 @@
       fluid
   >
     <v-row
+        class="mt-5"
         justify-center>
       <v-col>
         <v-img

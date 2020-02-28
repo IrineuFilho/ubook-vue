@@ -4,7 +4,6 @@
       class="text-none primary--text custom-buttom-height"
       rounded
       @click="openModal()"
-
   >
     <v-icon>mdi-plus</v-icon>
     Criar contato
