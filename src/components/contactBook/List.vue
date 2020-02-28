@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="pt-0">
     <v-col cols="12">
       <v-row>
         <v-simple-table
@@ -52,19 +52,18 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { filter } from 'lodash'
+import { filter, last, find, findIndex, differenceWith, first } from 'lodash'
 import ContactAvatar from "./ContactAvatar";
 
 export default {
   name: 'list',
   components: {ContactAvatar},
   mounted(){
-    this.contactList = this.contacts
+    this.contactList = Object.assign([], this.contacts)
   },
   data() {
     return {
-      contactList: [],
-      loaded: false
+      contactList: []
     }
   },
   methods: {
@@ -82,11 +81,12 @@ export default {
       this.openDeleteDialog();
       this.setIndexToBeDeleted(index)
     },
-    removeHighlight(index){
+    removeHighlight(id){
       const vm = this;
       setTimeout(() => {
-        const item = vm.contactList[index]
-        vm.$set(vm.contactList, index, {...item, highlight: false})
+        const item = find(vm.contactList, { id })
+        const index = findIndex(vm.contactList, { id })
+        vm.$set(vm.contactList, index, {...item, highlight: false}) //usado para fazer a mudança ser reativa
       }, 10000)
     },
     highlighted(item){
@@ -110,14 +110,21 @@ export default {
         this.contactList = this.contacts;
       }
     },
-    contacts(newValue) {
-      if (newValue.length > this.contactList.length){
-        const lastIndex = newValue.length-1;
-        const lastItem = newValue[lastIndex];
+    contacts(newContacts) {
+      if (newContacts.length === this.contactList.length){
+        this.contactList = Object.assign([], newContacts)
+        return;
+      }
+
+      if (newContacts.length > this.contactList.length){
+        const lastItem = last(newContacts);
         this.contactList.push({...lastItem, highlight: true});
-        this.removeHighlight(lastIndex);
+        this.removeHighlight(lastItem.id);
       } else {
-        this.contactList = Object.assign([], newValue);
+        const itemToBeRemoved = first(differenceWith(this.contactList, newContacts, (firstArray, secondArray) => firstArray.id === secondArray.id));
+        const index = findIndex(this.contactList, {id: itemToBeRemoved.id});
+        this.contactList.splice(index, 1)
+        this.contactList = Object.assign([], this.contactList)
       }
     }
   }
@@ -129,24 +136,24 @@ export default {
 .v-data-table {
   .v-data-table__wrapper {
     border-radius: 4px;
-    border: 1px solid #e1e1e1;
+    border: 1px solid $white;
   }
 
   thead {
     background: #fff !important;
     th{
-      color: #9198af !important;
+      color: $bluey-grey !important;
     }
   }
 
   tbody {
     tr {
       &.highlight{
-        background: #fff3f2 !important;
+        background: $very-light-pink !important;
       }
     }
     tr:hover {
-
+      background: $very-light-pink !important;
       cursor: pointer;
     }
   }

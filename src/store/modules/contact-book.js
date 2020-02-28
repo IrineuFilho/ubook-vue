@@ -12,8 +12,8 @@ export default {
   },
 
   mutations: {
-    RECOVERY_CONTACTS(state){
-      if (localStorage.getItem('contacts') === null){
+    RECOVERY_CONTACTS(state) {
+      if (localStorage.getItem('contacts') === null) {
         localStorage.setItem('contacts', JSON.stringify([]))
       }
       state.contacts = JSON.parse(localStorage.getItem("contacts"))
@@ -37,7 +37,8 @@ export default {
     SAVE_EDITED_ITEM(state, payload) {
       const contacts = Object.assign([], state.contacts)
       if (state.editedIndex === -1) {
-        contacts.push(payload)
+        const id = Date.now()
+        contacts.push({...payload, id })
       } else {
         contacts[state.editedIndex] = payload
       }
@@ -63,7 +64,7 @@ export default {
   },
 
   actions: {
-    recoveryContacts({commit}){
+    recoveryContacts({ commit }) {
       commit('RECOVERY_CONTACTS')
     },
     openCreateOrUpdateDialog({ commit }) {
@@ -96,23 +97,11 @@ export default {
   },
 
   getters: {
-    contacts(state) {
-      return state.contacts;
-    },
-    dialog(state) {
-      return state.dialog;
-    },
-    deleteDialog(state) {
-      return state.deleteDialog;
-    },
-    editedItem(state) {
-      return state.editedItem;
-    },
-    editedIndex(state) {
-      return state.editedIndex;
-    },
-    searchField(state){
-      return state.searchField;
-    }
+    contacts: state => state.contacts,
+    dialog: state => state.dialog,
+    deleteDialog: state => state.deleteDialog,
+    editedItem: state => state.editedItem,
+    editedIndex: state => state.editedIndex,
+    searchField: state => state.searchField,
   }
 }

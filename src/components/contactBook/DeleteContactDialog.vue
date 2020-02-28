@@ -11,7 +11,7 @@
       >
         Excluir contato
       </v-card-title>
-      <v-divider></v-divider>
+      <v-divider class="custom-divider"/>
 
       <v-card-text>
         <p
@@ -21,9 +21,9 @@
         </p>
       </v-card-text>
 
-      <v-divider></v-divider>
+      <v-divider class="custom-divider"/>
 
-      <v-card-actions>
+      <v-card-actions class="pt-3 pb-4 pr-4">
         <v-spacer></v-spacer>
         <v-btn
             class="text--transform-none v-btn-actions-dialog"
@@ -59,6 +59,11 @@
       ...mapActions('contactBook', ['closeDeleteDialog', 'deleteContact']),
       destroy() {
         this.deleteContact();
+        this.$store.dispatch('base/setSnackbar', {
+          color: 'primary',
+          show: true,
+          message: 'Contato removido com sucesso'
+        })
         this.closeDeleteDialog();
       }
     },

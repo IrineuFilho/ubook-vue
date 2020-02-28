@@ -11,12 +11,12 @@
       >
         Criar novo contato
       </v-card-title>
-      <v-divider></v-divider>
+      <v-divider class="custom-divider"/>
 
       <v-card-text>
 
         <v-container
-            class="pa-0"
+            class="pa-0 mt-4"
         >
           <v-form
               v-model="valid"
@@ -75,7 +75,7 @@
         </v-container>
       </v-card-text>
 
-      <v-divider></v-divider>
+      <v-divider class="custom-divider"/>
 
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -134,8 +134,14 @@ export default {
     },
     save() {
       const payload = { name: this.name, email: this.email, telephone: this.telephone };
-
       this.saveEditedItem(payload);
+
+      this.$store.dispatch('base/setSnackbar', {
+        color: 'primary',
+        show: true,
+        message: 'Contato salvo com sucesso'
+      })
+
       this.closeCreateOrUpdateDialog();
       this.cleanForm();
     },
@@ -176,7 +182,7 @@ export default {
   .v-text-field--custom {
     fieldset {
       height: 37px;
-      border: solid #c0c3d2 1px !important;
+      border: solid $cloudy-blue 1px !important;
     }
 
     .v-text-field__slot {
@@ -191,7 +197,7 @@ export default {
 
   .v-btn--custom--disabled {
     &.theme--light.v-btn.v-btn--disabled:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
-      background-color: #fa726833 !important;
+      background-color: $salmon-disabled !important;
 
       .v-btn__content {
         color: #fff !important;
