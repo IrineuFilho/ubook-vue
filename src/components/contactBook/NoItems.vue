@@ -20,7 +20,7 @@
           class="text-center"
       >
           <span>
-            Nenhum contato foi criado ainda.
+            {{noContactsMessage}}
           </span>
       </v-col>
     </v-row>
@@ -37,6 +37,7 @@
 </template>
 <script>
 import AddContactButton from "./AddContactButton";
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'no-items',
@@ -45,9 +46,10 @@ export default {
     return {}
   },
   computed: {
-    contacts() {
-      return this.$store.getters['contactBook/contacts']
-    }
+    ...mapGetters('contactBook', ['contacts']),
+    noContactsMessage() {
+      return this.contacts.length === 0 ? 'Nenhum contato foi criado ainda.' : 'Nenhum resultado encontrado'
+    },
   }
 }
 
