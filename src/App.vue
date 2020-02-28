@@ -1,28 +1,55 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app>
+    <alert-snack-bar/>
+    <create-or-update-dialog/>
+    <delete-contact-dialog/>
+
+    <toolbar></toolbar>
+
+    <no-items
+        v-if="contacts.length <= 0"
+    />
+    <list
+        v-show="contacts.length > 0"
+    />
+
+
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { mapActions, mapGetters } from 'vuex';
+import Toolbar from "@/components/contactBook/Toolbar";
+import List from "@/components/contactBook/List";
+import NoItems from "@/components/contactBook/NoItems";
+import CreateOrUpdateDialog from "@/components/contactBook/CreateOrUpdateDialog";
+import DeleteContactDialog from "@/components/contactBook/DeleteContactDialog";
+import AlertSnackBar from "@/components/base/AlertSnackBar";
 
 export default {
-  name: 'app',
+  name: 'App',
   components: {
-    HelloWorld
+    Toolbar,
+    List,
+    NoItems,
+    CreateOrUpdateDialog,
+    DeleteContactDialog,
+    AlertSnackBar
+  },
+  beforeMount(){
+    this.recoveryContacts()
+  },
+  methods: {
+    ...mapActions('contactBook', ['recoveryContacts'])
+  },
+  computed: {
+    ...mapGetters('contactBook', ['contacts'])
   }
-}
+};
 </script>
 
 <style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  #app {
+    background: $pale-grey-two !important;
+  }
 </style>
