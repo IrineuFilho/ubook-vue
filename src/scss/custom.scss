@@ -9,7 +9,7 @@
 }
 
 .text--dark {
-  color: #2a2d3b;
+  color: $dark;
 }
 
 .v-btn-actions-dialog {
@@ -21,6 +21,10 @@
 
 .font-size--16px {
   font-size: 16px !important;
+}
+
+.custom-divider{
+  border-color: $cloudy-blue !important;
 }
 
 @for $i from 1 through 5 {
