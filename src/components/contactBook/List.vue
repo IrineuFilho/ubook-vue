@@ -101,10 +101,10 @@ export default {
     ...mapGetters('contactBook', ['contacts', 'searchField']),
   },
   watch: {
-    searchField(newValue){
-      if(newValue !== ''){
+    searchField(searchTerm){
+      if(searchTerm !== ''){
         this.contactList = filter(this.contacts, (contact) => {
-          return contact.name.indexOf(newValue) !== -1
+          return new RegExp(`${searchTerm}`, 'i').exec(contact.name) !== null
         })
       } else {
         this.contactList = this.contacts;
