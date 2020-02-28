@@ -111,8 +111,12 @@ export default {
       }
     },
     contacts(newContacts) {
-      if (newContacts.length === this.contactList.length){
-        this.contactList = Object.assign([], newContacts)
+      if (newContacts.length === this.contactList.length) {
+        const updatedItem = first(differenceWith(newContacts, this.contactList, (firstArray, secondArray, c, d, e, f) => {
+          return firstArray.name === secondArray.name
+        }));
+        const index = findIndex(this.contactList, { id: updatedItem.id });
+        this.$set(this.contactList, index, { ...updatedItem }) //usado para fazer a mudança ser reativa
         return;
       }
 
