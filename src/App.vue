@@ -6,13 +6,7 @@
 
     <toolbar></toolbar>
 
-    <no-items
-        v-if="contacts.length <= 0"
-    />
-    <list
-        v-show="contacts.length > 0"
-    />
-
+    <list/>
 
   </v-app>
 </template>
@@ -21,7 +15,6 @@
 import { mapActions, mapGetters } from 'vuex';
 import Toolbar from "@/components/contactBook/Toolbar";
 import List from "@/components/contactBook/List";
-import NoItems from "@/components/contactBook/NoItems";
 import CreateOrUpdateDialog from "@/components/contactBook/CreateOrUpdateDialog";
 import DeleteContactDialog from "@/components/contactBook/DeleteContactDialog";
 import AlertSnackBar from "@/components/base/AlertSnackBar";
@@ -31,12 +24,11 @@ export default {
   components: {
     Toolbar,
     List,
-    NoItems,
     CreateOrUpdateDialog,
     DeleteContactDialog,
     AlertSnackBar
   },
-  beforeMount(){
+  beforeMount() {
     this.recoveryContacts()
   },
   methods: {
