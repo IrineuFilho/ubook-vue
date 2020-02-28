@@ -40,7 +40,7 @@ export default {
         const id = Date.now()
         contacts.push({...payload, id })
       } else {
-        contacts[state.editedIndex] = payload
+        contacts[state.editedIndex] = {...payload, id: contacts[state.editedIndex].id}
       }
       state.contacts = [...contacts]
 
