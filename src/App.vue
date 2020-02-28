@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <alert-snack-bar/>
     <create-or-update-dialog/>
     <delete-contact-dialog/>
 
@@ -23,6 +24,7 @@ import List from "@/components/contactBook/List";
 import NoItems from "@/components/contactBook/NoItems";
 import CreateOrUpdateDialog from "@/components/contactBook/CreateOrUpdateDialog";
 import DeleteContactDialog from "@/components/contactBook/DeleteContactDialog";
+import AlertSnackBar from "@/components/base/AlertSnackBar";
 
 export default {
   name: 'App',
@@ -31,7 +33,8 @@ export default {
     List,
     NoItems,
     CreateOrUpdateDialog,
-    DeleteContactDialog
+    DeleteContactDialog,
+    AlertSnackBar
   },
   beforeMount(){
     this.recoveryContacts()
@@ -45,8 +48,8 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
   #app {
-    background: #f8f9fd !important;
+    background: $pale-grey-two !important;
   }
 </style>
