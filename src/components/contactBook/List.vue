@@ -107,13 +107,15 @@ export default {
           return new RegExp(`${searchTerm}`, 'i').exec(contact.name) !== null
         })
       } else {
-        this.contactList = this.contacts;
+        this.contactList = Object.assign([], this.contacts);
       }
     },
     contacts(newContacts) {
       if (newContacts.length === this.contactList.length) {
-        const updatedItem = first(differenceWith(newContacts, this.contactList, (firstArray, secondArray, c, d, e, f) => {
-          return firstArray.name === secondArray.name
+        const updatedItem = first(differenceWith(newContacts, this.contactList, (arrVal, othVal) => {
+          return arrVal.name === othVal.name &&
+            arrVal.email === othVal.email &&
+            arrVal.telephone === othVal.telephone
         }));
         const index = findIndex(this.contactList, { id: updatedItem.id });
         this.$set(this.contactList, index, { ...updatedItem }) //usado para fazer a mudança ser reativa
