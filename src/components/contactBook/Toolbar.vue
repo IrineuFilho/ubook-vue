@@ -11,7 +11,7 @@
             src="@/assets/ic-logo.svg"
             class="mr-7"
         />
-      </v-col >
+      </v-col>
       <v-col
           class="text-right"
           md="2"

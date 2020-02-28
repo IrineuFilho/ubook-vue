@@ -1,5 +1,7 @@
 <template>
-  <v-container fluid class="pt-0">
+  <v-container
+      v-if="contactList.length > 0"
+      fluid class="pt-0">
     <v-col cols="12">
       <v-row>
         <v-simple-table
@@ -35,7 +37,7 @@
                       src="@/assets/ic-edit.svg"/>
 
                   <v-img
-                      @click="deleteItem(index)"
+                      @click="deleteItem(item.id)"
                       max-width="16px"
                       src="@/assets/ic-delete.svg"/>
                 </div>
@@ -48,17 +50,21 @@
       </v-row>
     </v-col>
   </v-container>
+  <no-items
+      v-else
+  />
 
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import { filter, last, find, findIndex, differenceWith, first } from 'lodash'
+import { filter, find, findIndex, differenceWith, first } from 'lodash'
 import ContactAvatar from "./ContactAvatar";
+import NoItems from "@/components/contactBook/NoItems";
 
 export default {
   name: 'list',
-  components: {ContactAvatar},
-  mounted(){
+  components: { ContactAvatar, NoItems },
+  mounted() {
     this.contactList = Object.assign([], this.contacts)
   },
   data() {
@@ -70,30 +76,31 @@ export default {
     ...mapActions('contactBook',
       [
         'setEditedItem', 'openCreateOrUpdateDialog',
-        'setIndexToBeDeleted', 'openDeleteDialog'
+        'setIdToBeDeleted', 'openDeleteDialog',
+        'searchInContacts'
       ]
     ),
     editItem(editedItem, index) {
       this.setEditedItem({ editedItem, index });
       this.openCreateOrUpdateDialog();
     },
-    deleteItem(index) {
+    deleteItem(id) {
       this.openDeleteDialog();
-      this.setIndexToBeDeleted(index)
+      this.setIdToBeDeleted(id)
     },
-    removeHighlight(id){
+    removeHighlight(id) {
       const vm = this;
       setTimeout(() => {
         const item = find(vm.contactList, { id })
         const index = findIndex(vm.contactList, { id })
-        vm.$set(vm.contactList, index, {...item, highlight: false}) //usado para fazer a mudança ser reativa
+        vm.$set(vm.contactList, index, { ...item, highlight: false }) //usado para fazer a mudança ser reativa
       }, 10000)
     },
-    highlighted(item){
+    highlighted(item) {
       if (!item)
         return false
 
-      return item.hasOwnProperty('highlight') ? item.highlight: false;
+      return item.hasOwnProperty('highlight') ? item.highlight : false;
     },
   },
 
@@ -101,36 +108,22 @@ export default {
     ...mapGetters('contactBook', ['contacts', 'searchField']),
   },
   watch: {
-    searchField(searchTerm){
-      if(searchTerm !== ''){
+    searchField(searchTerm) {
+      if (searchTerm !== '') {
         this.contactList = filter(this.contacts, (contact) => {
-          return new RegExp(`${searchTerm}`, 'i').exec(contact.name) !== null
+          return new RegExp(`${ searchTerm }`, 'i').exec(contact.name) !== null
         })
       } else {
         this.contactList = Object.assign([], this.contacts);
       }
     },
     contacts(newContacts) {
-      if (newContacts.length === this.contactList.length) {
-        const updatedItem = first(differenceWith(newContacts, this.contactList, (arrVal, othVal) => {
-          return arrVal.name === othVal.name &&
-            arrVal.email === othVal.email &&
-            arrVal.telephone === othVal.telephone
-        }));
-        const index = findIndex(this.contactList, { id: updatedItem.id });
-        this.$set(this.contactList, index, { ...updatedItem }) //usado para fazer a mudança ser reativa
-        return;
-      }
-
-      if (newContacts.length > this.contactList.length){
-        const lastItem = last(newContacts);
-        this.contactList.push({...lastItem, highlight: true});
-        this.removeHighlight(lastItem.id);
+      if (newContacts.length <= this.contactList.length) {
+        this.contactList = Object.assign([], newContacts)
       } else {
-        const itemToBeRemoved = first(differenceWith(this.contactList, newContacts, (firstArray, secondArray) => firstArray.id === secondArray.id));
-        const index = findIndex(this.contactList, {id: itemToBeRemoved.id});
-        this.contactList.splice(index, 1)
-        this.contactList = Object.assign([], this.contactList)
+        const updatedItem = first(differenceWith(newContacts, this.contactList, (firstArray, secondArray) => firstArray.id === secondArray.id));
+        this.contactList.push({ ...updatedItem, highlight: true })
+        this.removeHighlight(updatedItem.id);
       }
     }
   }

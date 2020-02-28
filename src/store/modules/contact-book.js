@@ -1,3 +1,5 @@
+import { findIndex } from 'lodash'
+
 export default {
   namespaced: true,
   state: {
@@ -38,23 +40,27 @@ export default {
       const contacts = Object.assign([], state.contacts)
       if (state.editedIndex === -1) {
         const id = Date.now()
-        contacts.push({...payload, id })
+        contacts.push({ ...payload, id })
       } else {
-        contacts[state.editedIndex] = {...payload, id: contacts[state.editedIndex].id}
+        contacts[state.editedIndex] = { ...payload, id: contacts[state.editedIndex].id }
       }
       state.contacts = [...contacts]
 
+      state.searchField = ''
       state.editedIndex = -1;
       state.editedItem = {};
 
       localStorage.setItem('contacts', JSON.stringify(state.contacts))
     },
-    SET_INDEX_TO_BE_DELETED(state, index) {
-      state.indexToBeDeleted = index;
+    SET_ID_TO_BE_DELETED(state, id) {
+      state.idToBeDeleted = id;
     },
     DELETE_ITEM(state) {
-      state.contacts.splice(state.indexToBeDeleted, 1)
-      state.indexToBeDeleted = -1;
+      const index = findIndex(state.contacts, { id: state.idToBeDeleted })
+
+      state.contacts.splice(index, 1)
+      state.idToBeDeleted = -1
+      state.searchField = ''
 
       localStorage.setItem('contacts', JSON.stringify(state.contacts))
     },
@@ -85,8 +91,8 @@ export default {
     saveEditedItem({ commit }, payload) {
       commit('SAVE_EDITED_ITEM', payload)
     },
-    setIndexToBeDeleted({ commit }, index) {
-      commit('SET_INDEX_TO_BE_DELETED', index)
+    setIdToBeDeleted({ commit }, id) {
+      commit('SET_ID_TO_BE_DELETED', id)
     },
     deleteContact({ commit }) {
       commit('DELETE_ITEM')

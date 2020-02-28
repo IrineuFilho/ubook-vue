@@ -10,7 +10,7 @@
   ></v-text-field>
 </template>
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'search-field',
@@ -23,12 +23,19 @@ export default {
   methods: {
     ...mapActions('contactBook', ['searchInContacts']),
   },
+  computed: {
+    ...mapGetters('contactBook', ['searchField'])
+  },
   watch: {
     search() {
       clearTimeout(this.interval)
       this.interval = setTimeout(() => {
         this.searchInContacts(this.search)
       }, 400)
+    },
+    searchField(newValue) {
+      if (newValue === '')
+        this.search = ''
     }
   }
 }
