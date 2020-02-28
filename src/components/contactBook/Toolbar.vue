@@ -1,16 +1,23 @@
 <template>
 
-  <v-container fluid>
+  <v-container fluid class="pb-0">
     <v-row>
-      <v-col md="auto">
+      <v-col
+          lg="auto"
+          md="auto"
+          sm="auto"
+      >
         <img
             src="@/assets/ic-logo.svg"
             class="mr-7"
         />
       </v-col >
-      <v-col md="2">
+      <v-col
+          class="text-right"
+          md="2"
+          sm="4"
+      >
         <add-contact-button
-            class="ml-7"
             v-if="contacts.length > 0"/>
       </v-col>
       <v-col>
